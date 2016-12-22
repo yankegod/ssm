@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间就是类的全路径-->
+<mapper namespace="cn.yanke.ssm.mapper.UserMapper">
+
+<!--根据id查询用户-->
+    <select id="findUserById" parameterType="int"  resultType="cn.yanke.ssm.po.User">
+        SELECT * FROM user where id = #{VALUE }
+    </select>
+
+    <!--根据用户名查询用户列表-->
+    <select id="findUserByName" parameterType="java.lang.String" resultType="cn.yanke.ssm.po.User">
+        SELECT * FROM user where NAME = #{VALUE }
+    </select>
+
+    <!--添加用户-->
+    <select id="insertUser" parameterType="cn.yanke.ssm.po.User" >
+        INSERT INTO USER (NAME ,birthday) VALUES (#{VALUE},#{VALUE})
+    </select>
+
+    <!--删除用户-->
+    <!--<delete id="deleteUSerById" parameterType="int" >-->
+        <!---->
+    <!--</delete>-->
+
+
+</mapper>
