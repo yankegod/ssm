@@ -15,9 +15,14 @@
     <title>用户查询</title>
 </head>
 <body>
+当前用户：${username}
+<c:if test="${username} != null">
+<a href="${pageContext.request.contextPath}/logout">退出</a>
+</c:if>
 <table>
 <c:forEach items="${userList}" var="user">
         <tr>
+            <td ><input type="text/></td>
             <td>${user.name}</td>
             <td>${user.birthday}</td>
 

@@ -29,6 +29,10 @@
     <!--组件扫描可以扫描controller、service、、、-->
     <context:component-scan base-package="cn.yanke.ssm.controller"></context:component-scan>
 
+    <!--静态资源解析：js、cs、img-->
+    <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
+    <mvc:resources mapping="/img/**" location="/images/"></mvc:resources>
+
 
     <!--处理器映射器 :将bean的name作为url进行查找，在配置Handler时指定beanname(就是url)
         所有都实现了HandlerMapping
@@ -53,12 +57,64 @@
 
     <!--注解映射器-->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
-    <!--注解适配器-->
-    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>-->
+    <!--注解适配器 加入messageConverters进行json转换-->
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
+        <!--<property name="messageConverters">-->
+            <!--<list>-->
+                <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 
     <!--使用mvc注解驱动器可以代替上面两个映射器和适配器配置
         还默认加载了很多默认的参数绑定方法：比如json转换解析器，实际用下面就可以了-->
-    <mvc:annotation-driven></mvc:annotation-driven>
+    <!--校验器注入-->
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator"></mvc:annotation-driven>
+
+
+    <!--拦截器配置针对handlermapping配置、一般不推荐-->
+    <!--<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">-->
+        <!--<property name="interceptors">-->
+            <!--<list>-->
+                <!--&lt;!&ndash;两个可以下面继续加&ndash;&gt;-->
+                <!--<ref bean="handlerIntercepter1"></ref>-->
+                <!--<ref bean="handlerIntercepter2"></ref>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean id="handlerIntercepter1" class="cn.yanke.ssm.intercept.HandlerIntercepter1"></bean>-->
+    <!--<bean id="handlerIntercepter2" class="cn.yanke.ssm.intercept.HandlerIntercepter2"></bean>-->
+
+
+    <!--全局拦截器配置，如果多个拦截器则顺序执行-->
+    <mvc:interceptors>
+        <!--登录拦截器-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="cn.yanke.ssm.intercept.LoginInterceptor"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <!--/**表示拦截所有url包括子url路径-->
+            <mvc:mapping path="/**"/>
+            <bean class="cn.yanke.ssm.intercept.HandlerIntercepter1"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="cn.yanke.ssm.intercept.HandlerIntercepter2"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+
+    <!--自定义参数绑定-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <!--日期类型转换-->
+                <bean class="cn.yanke.ssm.controller.converter.DateConverter"/>
+            </list>
+        </property>
+    </bean>
 
 
     <!--视图解析器 :解析jsp视图，默认使用jstl标签，需要jstl相应的包-->
@@ -66,6 +122,42 @@
         <!--配置jsp路径的前缀和后缀-->
         <property name="prefix" value="/WEB-INF/jsps/"/>
         <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--校验器工厂-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!--校验器-->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <!--指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认是用classpath下的ValidationMessages.properties-->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+    <!--校验错误信息配置文件-->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!--资源文件名，basenames不用加属性名-->
+        <property name="basenames">
+            <list >
+                <!--加载不成功前面加上classpath:-->
+                <value>CustomValidationMessages</value>
+            </list>
+        </property>
+        <!--资源编码格式-->
+        <property name="fileEncodings" value="utf-8"/>
+        <!--对资源文件内容缓存时间，秒-->
+        <property name="cacheMillis" value="120"/>
+    </bean>
+
+
+    <!--全局异常处理器，不需要id，通过接口来确定HandlerExceptionResolver,实现接口即可
+        配置多个只有一个起作用。-->
+    <bean class="cn.yanke.ssm.exception.UserExceptionResolver"></bean>
+
+
+    <!--文件上传解析器，form表单enctype="multipart/form-data"类型,一定要配置解析器。-->
+    <bean  id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置文件上传最大尺寸5mb-->
+        <property name="maxUploadSize">
+            <value>5242880</value>
+        </property>
     </bean>
 
 

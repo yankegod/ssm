@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class UserController3 {
     //RequestMapping实现一个方法和一个url的对应映射，一般将url和方法名一样。
     @RequestMapping("/queryUser")  //访问时还是要加.action
     public ModelAndView queryUser() throws Exception{
+
         List<User> userList = new ArrayList<User>();
 
         User user1 = new User();

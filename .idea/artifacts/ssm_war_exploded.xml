@@ -49,6 +49,10 @@
           <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/mchange-commons-0.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/mysql-connector-java-5.1.28-bin.jar" />
           <element id="library" level="module" name="JUnit4" module-name="ssm" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/aopalliance-1.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/validation-api-1.0.0.GA.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/hibernate-validator-4.3.0.Final.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/jboss-logging-3.3.0.Final-redhat-1.jar" />
         </element>
       </element>
     </root>

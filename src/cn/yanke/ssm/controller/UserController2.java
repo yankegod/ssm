@@ -17,6 +17,8 @@ import java.util.List;
  * 可通过response定义相应内容，如返回json数据。
  */
 public class UserController2 implements HttpRequestHandler {
+
+
     @Override
     public void handleRequest(HttpServletRequest httpServletRequest,
           HttpServletResponse httpServletResponse) throws ServletException, IOException {
